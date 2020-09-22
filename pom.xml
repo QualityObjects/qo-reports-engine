@@ -8,10 +8,10 @@
 		<version>2.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.qualityobjetcs</groupId>
+	<groupId>com.qualityobjects</groupId>
 	<artifactId>qo-reports-engine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>qo-reports-engine.</name>
+	<name>qo-reports-engine</name>
 	<description>Reportes y querys nativas</description>
 
 	<properties>
@@ -131,6 +131,31 @@
 							<version>3.0.0-M4</version>
 
 
+				</plugin>
+
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.7.0.1746</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.5</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 			</plugins>
