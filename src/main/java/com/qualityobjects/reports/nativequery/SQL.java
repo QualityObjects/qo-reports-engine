@@ -83,7 +83,7 @@ public class SQL {
 	}
 
 	public static String addWhereCondition(String sqlBase, String whereCond) {
-		if (StringUtils.isEmpty(whereCond)) {
+		if (!StringUtils.hasLength(whereCond)) {
 			return sqlBase;
 		}
 		boolean hasGroupBy = sqlBase.toLowerCase().contains("group by");

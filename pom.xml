@@ -5,17 +5,20 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.4.RELEASE</version>
+		<version>2.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.qualityobjects</groupId>
 	<artifactId>qo-reports-engine</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>qo-reports-engine</name>
 	<description>Reportes y querys nativas</description>
 
 	<properties>
 		<java.version>11</java.version>
+		<maven.compiler.release>11</maven.compiler.release>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -93,17 +96,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.qualityobjects</groupId>
-			<artifactId>qo-java-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.qualityobjects</groupId>
 			<artifactId>qo-springboot-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -111,12 +105,7 @@
 			<artifactId>super-csv</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-				<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<version>5.3.4.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
+
 	</dependencies>
 	<build>
 		<pluginManagement>
@@ -126,11 +115,8 @@
 					<artifactId>spring-boot-maven-plugin</artifactId>
 				</plugin>
 				<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-plugin</artifactId>
-							<version>3.0.0-M4</version>
-
-
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
 				</plugin>
 
 				<plugin>

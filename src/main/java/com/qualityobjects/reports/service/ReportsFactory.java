@@ -1,5 +1,4 @@
 package com.qualityobjects.reports.service;
-import liquibase.pro.packaged.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -17,7 +16,7 @@ public class ReportsFactory  {
     private ApplicationContext context;
 
     @SuppressWarnings("unchecked")
-	public NativeQueryReport<T> getReportComponent(String reportName) {
+	public <T> NativeQueryReport<T> getReportComponent(String reportName) {
         if (reportBeans == null) {
             loadReports();            
         }
