@@ -1,26 +1,5 @@
 package com.qualityobjects.reports.nativequery.repo;
 
-import com.qualityobjects.commons.exception.QORuntimeException;
-import com.qualityobjects.commons.exception.SQLSetException;
-import com.qualityobjects.reports.nativequery.Condition;
-import com.qualityobjects.reports.nativequery.JdbcTemplateSQLWhere;
-import com.qualityobjects.reports.nativequery.NativeQuery;
-import com.qualityobjects.reports.nativequery.SQL;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.*;
-import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,8 +12,39 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.sql.DataSource;
+
+import com.qualityobjects.commons.exception.DataReadRuntimeException;
+import com.qualityobjects.commons.exception.QORuntimeException;
+import com.qualityobjects.reports.nativequery.Condition;
+import com.qualityobjects.reports.nativequery.JdbcTemplateSQLWhere;
+import com.qualityobjects.reports.nativequery.NativeQuery;
+import com.qualityobjects.reports.nativequery.SQL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterDisposer;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlParameterValue;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.stereotype.Repository;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @Repository
-//@Transactional(readOnly = true)
 public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NativeQueryRepositoryImpl.class);
@@ -155,7 +165,6 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 		@Override
 		public void run() {
 			try {
-				LOG.info("CLOSING RS");
 				if (!rs.isClosed()) {
 					JdbcUtils.closeResultSet(rs);
 				}
@@ -182,15 +191,18 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 		@Override
 		public boolean tryAdvance(Consumer<? super T> action) {
 			try {
-				if (!rs.next())
+				if (!rs.next()) {
 					return false;
+				}
 				action.accept(srm.mapRow(rs, rs.getRow()));
 				return true;
 			} catch (SQLException ex) {
-				throw new SQLSetException(ex.getMessage());
+				LOG.error("Error reading ResulSet: {}", ex.toString());
+				throw new DataReadRuntimeException(); 
 			}
 		}
 	}
+
 	
 	private static class CustomPreparedStatementCreatorFactory extends PreparedStatementCreatorFactory {
 		@Getter
