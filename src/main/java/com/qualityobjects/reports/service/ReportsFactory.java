@@ -1,11 +1,14 @@
 package com.qualityobjects.reports.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.qualityobjects.reports.service.base.Report;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class ReportsFactory  {

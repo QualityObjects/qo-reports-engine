@@ -10,12 +10,13 @@
 	</parent>
 	<groupId>com.qualityobjects</groupId>
 	<artifactId>qo-reports-engine</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>qo-reports-engine</name>
 	<description>Reportes y querys nativas</description>
 
 	<properties>
 		<java.version>11</java.version>
+		<flying-saucer-version>9.1.20</flying-saucer-version>
 		<maven.compiler.release>11</maven.compiler.release>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
@@ -41,7 +42,16 @@
 			<artifactId>super-csv</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-core</artifactId>
+			<version>${flying-saucer-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>${flying-saucer-version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

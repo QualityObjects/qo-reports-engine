@@ -1,4 +1,4 @@
-package com.qualityobjects.reports.service;
+package com.qualityobjects.reports.service.base;
 
 import java.lang.annotation.*;
 
