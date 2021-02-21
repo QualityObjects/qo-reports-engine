@@ -3,6 +3,8 @@ package com.qualityobjects.reports.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.qualityobjects.commons.exception.QORuntimeException;
+import com.qualityobjects.reports.service.base.NativeQueryReport;
 import com.qualityobjects.reports.service.base.Report;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,30 @@ public class ReportsFactory  {
     private ApplicationContext context;
 
     @SuppressWarnings("unchecked")
-	public <T> NativeQueryReport<T> getReportComponent(String reportName) {
+    private <T> T getReportComponent(String reportName, Class<T> klass) {
         if (reportBeans == null) {
             loadReports();            
         }
-        return (NativeQueryReport<T>) reportBeans.get(reportName);
+        T reportBean = (T)reportBeans.get(reportName);
+        if (reportBean == null) {
+            throw new QORuntimeException("Report bean is not defined: " + reportName);
+        }
+        return reportBean;
+    }
+
+    @SuppressWarnings("unchecked")
+	public <T> NativeQueryReport<T> getReportComponent(String reportName) {
+        return (NativeQueryReport<T>) this.getReportComponent(reportName, NativeQueryReport.class);
+    }
+
+    @SuppressWarnings("unchecked")
+	public <T> NativeQueryReportCsv<T> getCsvReportComponent(String reportName) {
+        return (NativeQueryReportCsv<T>) this.getReportComponent(reportName, NativeQueryReportCsv.class);
+    }
+
+    @SuppressWarnings("unchecked")
+	public <T> NativeQueryReportPdf<T> getPdfReportComponent(String reportName) {
+        return (NativeQueryReportPdf<T>) this.getReportComponent(reportName, NativeQueryReportPdf.class);
     }
 
     private synchronized void loadReports() {

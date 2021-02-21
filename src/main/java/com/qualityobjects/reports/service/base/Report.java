@@ -15,4 +15,5 @@ public @interface Report {
      */ 
 	String value();
 
-}
+     ReportType type = ReportType.CSV;
+} 
