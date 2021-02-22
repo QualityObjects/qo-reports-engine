@@ -1,15 +1,21 @@
 package com.qualityobjects.reports.service;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.qualityobjects.commons.exception.DataReadRuntimeException;
 import com.qualityobjects.reports.common.ClasspathImageResolver;
@@ -30,8 +36,10 @@ public interface NativeQueryReportPdf<T> extends NativeQueryReport<T> {
 
 	public default String getHtmlPageTemplateContent() {
 		try {
-			return Files.readString(Paths.get(getClass().getResource(this.getHtmlPageTemplateResource()).toURI()), Charset.forName("utf-8"));
-		} catch (IOException | URISyntaxException e) {
+			return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(this.getHtmlPageTemplateResource()), StandardCharsets.UTF_8))
+				.lines()
+				.collect(Collectors.joining("\n"));
+		} catch (RuntimeException e) {
 			throw new DataReadRuntimeException("Error reading resource: " + this.getHtmlPageTemplateResource(), e);
 		}
 	}
