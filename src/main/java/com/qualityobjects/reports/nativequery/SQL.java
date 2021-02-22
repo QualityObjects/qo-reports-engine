@@ -82,26 +82,26 @@ public class SQL {
 		return whereIdx > fromIdx;
 	}
 
-	public static String addWhereCondition(String sqlBase, String whereCond) {
+	public static String addWhereCondition(String sqlBase, String whereCond, boolean forceWhereClause) {
 		if (!StringUtils.hasLength(whereCond)) {
 			return sqlBase;
 		}
 		boolean hasGroupBy = sqlBase.toLowerCase().contains("group by");
 		if (!hasGroupBy) {
-			String joinStr = hasWhere(sqlBase) ? "and" : SQL_WHERE;
+			String joinStr = (!forceWhereClause && hasWhere(sqlBase)) ? "and" : SQL_WHERE;
 			return String.join(" ", sqlBase, joinStr, whereCond);
 		} else {
 			int groupByPos = sqlBase.toLowerCase().indexOf("group by");
 			String newBase = sqlBase.substring(0, groupByPos);
 			String groupBySentence = sqlBase.substring(groupByPos);
-			String joinStr = hasWhere(newBase) ? "and" : SQL_WHERE;
+			String joinStr = (!forceWhereClause && hasWhere(newBase)) ? "and" : SQL_WHERE;
 			String finalSQL = String.join(" ", newBase, joinStr, whereCond, groupBySentence);
 			return finalSQL.replace("  ", " ");
 		}
 	}
 
-	public static String addWhereCondition(String sqlBase, JdbcTemplateSQLWhere jtsw) {
-		return addWhereCondition(sqlBase, jtsw.getWhereTemplate());
+	public static String addWhereCondition(String sqlBase, JdbcTemplateSQLWhere jtsw, boolean forceWhereClause) {
+		return addWhereCondition(sqlBase, jtsw.getWhereTemplate(), forceWhereClause);
 	}
 
 	public static SqlParameterValue paramOf(String paramName, Object value) {

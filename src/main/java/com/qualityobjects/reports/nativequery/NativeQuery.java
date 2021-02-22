@@ -9,4 +9,6 @@ public @interface NativeQuery {
 
 	String value();
 
+	boolean forceWhere() default false;
+	
 }

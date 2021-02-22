@@ -17,7 +17,6 @@ import com.qualityobjects.reports.nativequery.Condition;
 import com.qualityobjects.reports.service.base.NativeQueryReport;
 
 import org.apache.commons.text.StringSubstitutor;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.xhtmlrenderer.pdf.ITextRenderer;

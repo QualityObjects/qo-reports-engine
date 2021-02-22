@@ -20,6 +20,7 @@ import com.qualityobjects.reports.nativequery.Condition;
 import com.qualityobjects.reports.nativequery.JdbcTemplateSQLWhere;
 import com.qualityobjects.reports.nativequery.NativeQuery;
 import com.qualityobjects.reports.nativequery.SQL;
+import com.qualityobjects.reports.nativequery.mapper.CustomBeanRowMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterDisposer;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -60,15 +60,15 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 		NativeQuery nq = dtoClass.getAnnotation(NativeQuery.class);
 		JdbcTemplateSQLWhere jtsw = where != null ? where.toJdbcTemplateSQLWhere() : JdbcTemplateSQLWhere.empty();
 
-		CustomPreparedStatementCreatorFactory pscCount = pscfOfCount(nq.value(), jtsw);
+		CustomPreparedStatementCreatorFactory pscCount = pscfOfCount(nq.value(), jtsw, nq.forceWhere());
 		int total = jdbcTemplate.<Integer>query(pscCount.newPreparedStatementCreator(), rs -> {
 				rs.next();
 				return rs.getInt(1);
 		});
 		List<T> list;
 		if (total > 0) {
-			CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, pagRequest);
-			RowMapper<T> srm = new BeanPropertyRowMapper<>(dtoClass, false);
+			CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, pagRequest, nq.forceWhere());
+			RowMapper<T> srm = CustomBeanRowMapper.of(dtoClass);
 			list = jdbcTemplate.query(psc.newPreparedStatementCreator(), srm);
 		} else {
 			list = List.of();
@@ -87,8 +87,8 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 
 		NativeQuery nq = dtoClass.getAnnotation(NativeQuery.class);
 		JdbcTemplateSQLWhere jtsw = where != null ? where.toJdbcTemplateSQLWhere() : JdbcTemplateSQLWhere.empty();
-		CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, sort);
-		RowMapper<T> srm = new BeanPropertyRowMapper<>(dtoClass, false);
+		CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, sort, nq.forceWhere());
+		RowMapper<T> srm = CustomBeanRowMapper.of(dtoClass);
 
 		return jdbcTemplate.query(psc.newPreparedStatementCreator(), srm);
 	}
@@ -102,7 +102,7 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 	public <T> Stream<T> findAllAsStream(Condition where, Sort sort, Class<T> dtoClass) {
 		NativeQuery nq = dtoClass.getAnnotation(NativeQuery.class);
 		JdbcTemplateSQLWhere jtsw = where != null ? where.toJdbcTemplateSQLWhere() : JdbcTemplateSQLWhere.empty();
-		CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, sort);
+		CustomPreparedStatementCreatorFactory psc = pscfOf(nq.value(), jtsw, sort, nq.forceWhere());
 
 		return this.execute(psc.newPreparedStatementCreator(),
 				preparedStatement -> {
@@ -135,26 +135,26 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 	}
 
 	@SuppressWarnings("unchecked")
-	private CustomPreparedStatementCreatorFactory pscfOf(String sqlBase, JdbcTemplateSQLWhere jtsw, Sort sort) {
-		String sql = SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate());
+	private CustomPreparedStatementCreatorFactory pscfOf(String sqlBase, JdbcTemplateSQLWhere jtsw, Sort sort, boolean forceWhereClause) {
+		String sql = SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate(), forceWhereClause);
 		sql += SQL.sortClause(sort);
 		List<? extends SqlParameter> params = new ArrayList<>(jtsw.getParams());
 		return CustomPreparedStatementCreatorFactory.of(sql, (List<SqlParameter>) params);
 	}
 
 	@SuppressWarnings("unchecked")
-	private CustomPreparedStatementCreatorFactory pscfOf(String sqlBase, JdbcTemplateSQLWhere jtsw, Pageable pagReq) {
-		String sql = SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate());
+	private CustomPreparedStatementCreatorFactory pscfOf(String sqlBase, JdbcTemplateSQLWhere jtsw, Pageable pagReq, boolean forceWhereClause) {
+		String sql = SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate(), forceWhereClause);
 		List<? extends SqlParameter> params = new ArrayList<>(jtsw.getParams());
 		sql += SQL.paginationClause(pagReq, (List<SqlParameterValue>) params);
 		return CustomPreparedStatementCreatorFactory.of(sql, (List<SqlParameter>) params);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private CustomPreparedStatementCreatorFactory pscfOfCount(String sqlBase, JdbcTemplateSQLWhere jtsw) {
+	private CustomPreparedStatementCreatorFactory pscfOfCount(String sqlBase, JdbcTemplateSQLWhere jtsw, boolean forceWhereClause) {
 		final String sqlCountTemplate = "select count(1) as total from (%s) virtual_table"; 
 		List<? extends SqlParameter> params = new ArrayList<>(jtsw.getParams());
-		String sql = String.format(sqlCountTemplate, SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate())); 
+		String sql = String.format(sqlCountTemplate, SQL.addWhereCondition(sqlBase, jtsw.getWhereTemplate(), forceWhereClause)); 
 		return CustomPreparedStatementCreatorFactory.of(sql, (List<SqlParameter>) params);
 	}
 	
@@ -185,7 +185,7 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 		public ResultSetIterator(ResultSet rs, Class<T> rowBeanClass) {
 			super(Long.MAX_VALUE, Spliterator.IMMUTABLE);
 			this.rs = rs;
-			srm = new BeanPropertyRowMapper<>(rowBeanClass, false);
+			srm = CustomBeanRowMapper.of(rowBeanClass);
 		}
 
 		@Override
