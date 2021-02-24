@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.stream.Stream;
 
-import com.qualityobjects.commons.exception.GeneratingCSVErrorException;
+import com.qualityobjects.reports.exception.GeneratingCSVErrorException;
 import com.qualityobjects.commons.exception.QOException;
 import com.qualityobjects.commons.exception.QORuntimeException;
 import com.qualityobjects.reports.nativequery.Condition;
