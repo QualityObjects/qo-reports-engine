@@ -1,6 +1,6 @@
 package com.qualityobjects.reports.service.base;
 
-import com.qualityobjects.commons.exception.GeneratingCSVErrorException;
+import com.qualityobjects.reports.exception.GeneratingCSVErrorException;
 import com.qualityobjects.commons.exception.QOException;
 import com.qualityobjects.commons.exception.QORuntimeException;
 import com.qualityobjects.springboot.repository.StreamSpecificationRepository;
