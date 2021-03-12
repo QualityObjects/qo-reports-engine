@@ -22,8 +22,6 @@ import com.qualityobjects.reports.nativequery.NativeQuery;
 import com.qualityobjects.reports.nativequery.SQL;
 import com.qualityobjects.reports.nativequery.mapper.CustomBeanRowMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,11 +41,11 @@ import org.springframework.stereotype.Repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 public class NativeQueryRepositoryImpl implements NativeQueryRepository {
-
-	private static final Logger LOG = LoggerFactory.getLogger(NativeQueryRepositoryImpl.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -173,7 +171,7 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 				}
 				DataSourceUtils.releaseConnection(rs.getStatement().getConnection(), dataSource);
 			} catch (SQLException e) {
-				LOG.error("Error (ignored) closing resultset and statement:{} " , e.getMessage());
+				log.error("Error (ignored) closing resultset and statement:{} " , e.getMessage());
 			}
 		}
 	}
@@ -197,7 +195,7 @@ public class NativeQueryRepositoryImpl implements NativeQueryRepository {
 				action.accept(srm.mapRow(rs, rs.getRow()));
 				return true;
 			} catch (SQLException ex) {
-				LOG.error("Error reading ResulSet: {}", ex.toString());
+				log.error("Error reading ResulSet: {}", ex.toString());
 				throw new DataReadRuntimeException(); 
 			}
 		}
