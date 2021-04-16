@@ -47,8 +47,9 @@ public interface StreamingData<T> {
 			}
 			list.forEachOrdered(element -> {
 				try {
+					element = postProcessData(element);
 					beanWriter.write(element, config.getProperties());
-				} catch (IOException e) {					
+				} catch (IOException | QOException e) {					
 					throw new QORuntimeException("Error generando CSV: " + e.toString() + " elemento: " + element);
 				}
 			});
@@ -56,6 +57,14 @@ public interface StreamingData<T> {
 			throw new GeneratingCSVErrorException("Error generando CSV: " + e.toString());
 		}
 
+	}
+
+	/**
+	 * Method to process data after the row is retrieved from DB.
+	 * @param row
+	 */
+	public default T postProcessData(T row) throws QOException {
+		return row;
 	}
 	
 	@Data
