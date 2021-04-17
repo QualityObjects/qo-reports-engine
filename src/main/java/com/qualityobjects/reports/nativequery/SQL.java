@@ -78,8 +78,7 @@ public class SQL {
 
 	public static boolean hasWhere(String sql) {
 		int whereIdx = sql.toLowerCase().lastIndexOf(SQL_WHERE);
-		int fromIdx = sql.toLowerCase().lastIndexOf("from");
-		return whereIdx > fromIdx;
+		return whereIdx > -1;
 	}
 
 	public static String addWhereCondition(String sqlBase, String whereCond, boolean forceWhereClause) {
