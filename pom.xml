@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.qualityobjects</groupId>
 	<artifactId>qo-reports-engine</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>qo-reports-engine</name>
 	<description>Reportes y querys nativas</description>
 
@@ -20,6 +20,8 @@
 		<maven.compiler.release>11</maven.compiler.release>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -34,7 +36,7 @@
 		<dependency>
 			<groupId>com.qualityobjects</groupId>
 			<artifactId>qo-springboot-commons</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>

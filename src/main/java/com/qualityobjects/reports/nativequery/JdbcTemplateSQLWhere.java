@@ -30,7 +30,7 @@ public class JdbcTemplateSQLWhere {
 		return of(where, List.of());
 	}
 	
-	public static final Pattern PARAN_NAME_PATTERN = Pattern.compile(":([a-z0-9_$]+)");
+	public static final Pattern PARAN_NAME_PATTERN = Pattern.compile("[^:]:([a-z0-9_$]+)");
 
 	public static List<String> extractOrderedParamNames(String sql) {
 		List<String> paramNames = new ArrayList<>();

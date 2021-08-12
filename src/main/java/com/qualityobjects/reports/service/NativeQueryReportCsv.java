@@ -43,7 +43,7 @@ public interface NativeQueryReportCsv<T> extends NativeQueryReport<T> {
 			}
 
 			stream.forEachOrdered(element -> {
-				try {					
+				try {
 					beanWriter.write(postProcessData(element), config.getProperties());
 				} catch (QOException | IOException e) {					
 					throw new QORuntimeException("Error generando CSV: " + e.toString() + " elemento: " + element);

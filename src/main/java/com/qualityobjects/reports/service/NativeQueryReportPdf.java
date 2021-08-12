@@ -1,16 +1,10 @@
 package com.qualityobjects.reports.service;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.qualityobjects.commons.exception.DataReadRuntimeException;
+import com.qualityobjects.commons.exception.QOException;
 import com.qualityobjects.reports.common.ClasspathImageResolver;
 import com.qualityobjects.reports.nativequery.Condition;
 import com.qualityobjects.reports.service.base.NativeQueryReport;
@@ -51,7 +46,7 @@ public interface NativeQueryReportPdf<T> extends NativeQueryReport<T> {
 	 * @param ctx Context data that can contains info about previous page, last record, and so on.
 	 * @return The parameters to applu on page template
 	 */
-	public Map<String, Object> getTemplateData(Iterator<T> iterator, Map<String, Object> ctx);
+	public Map<String, Object> getTemplateData(Iterator<T> iterator, Map<String, Object> ctx) throws QOException;
 
 	/**
 	 * it receives the data and the page tample (that usually is cached to be retrieved just one time in all the process)
@@ -60,7 +55,7 @@ public interface NativeQueryReportPdf<T> extends NativeQueryReport<T> {
 	 * @param pageTemplate
 	 * @return
 	 */
-	public default String renderPage(Iterator<T> iterator, String pageTemplate, Map<String, Object> ctx) {
+	public default String renderPage(Iterator<T> iterator, String pageTemplate, Map<String, Object> ctx) throws QOException {
 		Map<String, Object> params = getTemplateData(iterator, ctx);
 		StringSubstitutor ss = new StringSubstitutor(params);
 
@@ -68,7 +63,7 @@ public interface NativeQueryReportPdf<T> extends NativeQueryReport<T> {
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public default void generatePdf(Condition where, OutputStream output) {
+    public default void generatePdf(Condition where, OutputStream output) throws QOException {
 		List<T> data = getRepository().findAll(where, this.getDefaultSort(), this.getDomainType());
         Iterator<T> iterator = data.iterator();
 		Map<String, Object> ctx = new HashMap<>();
