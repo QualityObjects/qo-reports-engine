@@ -11,7 +11,8 @@ public class RawSqlCondition implements Condition {
   private final String rawSql;
 
   @Override
-  public JdbcTemplateSQLWhere toMyBatisCondition() {
-    return JdbcTemplateSQLWhere.of(rawSql, Map.of());
+  public JdbcTemplateSQLWhere toJdbcTemplateSQLWhere() {    
+    return JdbcTemplateSQLWhere.of(rawSql);
   }
+
 }

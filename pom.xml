@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.qualityobjects</groupId>
 	<artifactId>qo-reports-engine</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<name>qo-reports-engine</name>
 	<description>Reportes y querys nativas</description>
 
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.qualityobjects</groupId>
 			<artifactId>qo-springboot-commons</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
+			<version>0.0.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
