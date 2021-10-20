@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.qualityobjects</groupId>
 			<artifactId>qo-springboot-commons</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
