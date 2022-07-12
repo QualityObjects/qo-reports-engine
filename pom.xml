@@ -133,4 +133,19 @@
 	</distributionManagement>
 
 
+	<repositories>
+
+		<repository>
+
+			<id>qo-snapshots</id>
+
+			<name>QO Snapshots</name>
+
+			<url>https://nexus.qodev.es/repository/maven-snapshots/</url>
+
+		</repository>
+
+	</repositories>
+
+
 	</project>
