@@ -1,4 +1,4 @@
-def gitCredentialsId = 'GitLab-qualityobjects'
+def gitCredentialsId = 'github-qoadmin'
 def mavenCredentialsId = 'maven-nexus-settings'
 
 pipeline {
@@ -39,7 +39,7 @@ pipeline {
 				}
 
 				dir("${REPO_DIR_NAME}") {
-					git url: 'git@gitlab.com:qo-oss/libs/qo-reports-engine.git',
+					git url: 'git@github.com:QualityObjects/qo-java-commons.git',
 						branch: '${BUILD_BRANCH}',
 						credentialsId: gitCredentialsId
 				}
