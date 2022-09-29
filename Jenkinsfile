@@ -39,7 +39,7 @@ pipeline {
 				}
 
 				dir("${REPO_DIR_NAME}") {
-					git url: 'git@github.com:QualityObjects/qo-java-commons.git',
+					git url: 'git@github.com:QualityObjects/qo-reports-engine.git',
 						branch: '${BUILD_BRANCH}',
 						credentialsId: gitCredentialsId
 				}
